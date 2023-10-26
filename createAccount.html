@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Chat App</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="sidebar">
+      <h2>Available Rooms</h2>
+      <button onclick="getRooms()">Refresh</button>
+      <ul id="roomList">
+        <!-- Room items will be dynamically added here -->
+      </ul>
+      <button onclick="createRoom()">Create Room</button>
+    </div>
+    <div class="content">
+      <div class="header">
+        <h1>Chat App</h1>
+        <h2>Welcome to the Account Creation Page</h2>
+        <a
+          href="file:///C:/Users/namdi/OneDrive/Desktop/CMPE-133/SE2Project-master/index.html"
+          >Go to Home Page</a
+        >
+      </div>
+      <div class="room-info">
+        <h2 id="roomTitle"></h2>
+        <ul id="onlineUsers"></ul>
+      </div>
+      <div class="user-input">
+        <input
+          type="text"
+          id="usernameInput"
+          placeholder="Enter your username"
+        />
+        <input
+          type="text"
+          id="passwordInput"
+          placeholder="Enter your password"
+        />
+        <button onclick="createAccount()">Create Account</button>
+      </div>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>
