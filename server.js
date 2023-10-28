@@ -1,3 +1,4 @@
+const path = require('path')
 const express = require('express');
 const http = require('http');
 const WebSocket = require('ws');
@@ -108,6 +109,9 @@ function broadcastOnlineUsers(room) {
   });
 }
 
+app.get("/",(req, res) => {
+	res.sendFile(path.join(__dirname, './index.html'));
+})
 server.listen(3000, () => {
   console.log('Server listening on port 3000');
 });
