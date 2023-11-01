@@ -8,11 +8,10 @@
 <body>
   <div class="sidebar">
     <h2>Available Rooms</h2>
-    <button onclick="getRooms()">Refresh</button>
+    <button onclick="createRoom()">Create Room</button>
     <ul id="roomList">
       <!-- Room items will be dynamically added here -->
     </ul>
-    <button onclick="createRoom()">Create Room</button>
   </div>
   <div class="content">
     <div class="header">
@@ -26,23 +25,14 @@
       <input type="text" id="usernameInput" placeholder="Enter your username">
       <button onclick="setUsername()">Set Username</button>
     </div>
+    <div class="chat-container">
+      <div id="chatMessages">
+        <!-- Chat messages will be displayed here -->
+      </div>
+      <input type="text" id="chatInput" placeholder="Type your message..." onkeydown="sendChatMessage(event)">
+      <button onclick="sendChatMessage()">Send</button>
+    </div>
   </div>
-  <div class="container">
-    <br>
-    <div class="jumbotron">
-        <h1 class="display-4">Send Message</h1>
-        <br>
-        <input id="name" class="form-control" placeholder="Name">
-        <br>
-        <textarea id="message" class="form-control" placeholder="Message"></textarea>
-        <br>
-        <button id="send" class="btn btn-success">Send</button>
-    </div>
-    <div id="messages">
-
-    </div>
-</div>
   <script src="script.js"></script>
 </body>
 </html>
-
