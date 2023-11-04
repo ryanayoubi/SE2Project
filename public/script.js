@@ -106,9 +106,9 @@ function sendChatMessage() {
     chatInput.value = '';
   }
 }
-
+/*
 document.getElementById('chatInput').addEventListener('keydown', (event) => {
   if (event.key === 'Enter') {
     sendChatMessage();
   }
-});
+});*/
