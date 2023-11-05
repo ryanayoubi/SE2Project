@@ -1,6 +1,7 @@
 const socket = new WebSocket('ws://localhost:3000');
 let currentRoom = null;
 let currentUser = null;
+let currentUserLanguage = 'en'; // Default to English
 const roomChatMessages = new Map();
 
 socket.onmessage = (event) => {
@@ -25,8 +26,13 @@ function createRoom() {
 function setUsername() {
   const usernameInput = document.getElementById('usernameInput');
   const username = usernameInput.value.trim();
+  const languageSelect = document.getElementById('languageSelect');
+  const selectedLanguage = languageSelect.value;
+
   if (username) {
     currentUser = username;
+    currentUserLanguage = selectedLanguage; // Store the user's selected language
+    
     updateRoomTitle();
     updateOnlineUsers([username]);
     usernameInput.value = '';

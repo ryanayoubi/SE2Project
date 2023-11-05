@@ -1,6 +1,7 @@
 const http = require('http');
 const WebSocket = require('ws');
 const express = require('express');
+const { Translate } = require('@google-cloud/translate').v2; // Import the Google Cloud Translate library
 const app = express();
 
 app.use(express.static('public'));
@@ -11,8 +12,26 @@ const wss = new WebSocket.Server({ server });
 const rooms = new Map();
 const users = new Map();
 
+// Initialize the Google Cloud Translation API client with your credentials
+const translate = new Translate({
+  keyFilename: './public/testing-with-bard-5d87b6bb04e1.json',
+});
+
+// Function to translate a message from the source language to English
+async function translateMessage(message, sourceLanguage) {
+  try {
+    // Translate the message to English
+    const [translation] = await translate.translate(message, { from: sourceLanguage, to: 'en' });
+    return translation;
+  } catch (error) {
+    console.error('Translation error:', error);
+    return message; // Fallback to the original message if translation fails
+  }
+}
+
+
 wss.on('connection', (ws) => {
-  ws.on('message', (message) => {
+  ws.on('message', async (message) => {
     const data = JSON.parse(message);
 
     if (data.type === 'createRoom') {
@@ -35,7 +54,13 @@ wss.on('connection', (ws) => {
     } else if (data.type === 'chat') {
       if (ws.room && ws.username) {
         const roomName = ws.room;
-        broadcastChat(roomName, ws.username, data.message);
+
+        const sourceLanguage = ws.language; // Get the user's selected language
+        const translatedMessage = await translateMessage(data.message, sourceLanguage);
+
+        broadcastChat(roomName, ws.username, translatedMessage);
+
+       // broadcastChat(roomName, ws.username, data.message);
       }
     }
   });
