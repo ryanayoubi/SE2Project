@@ -4,45 +4,71 @@
     <meta charset="UTF-8" />
     <title>Chat App</title>
     <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="loginPage.css" />
+    
   </head>
   <body>
-    <div class="sidebar">
-      <h2>Available Rooms</h2>
-      <button onclick="getRooms()">Refresh</button>
-      <ul id="roomList">
-        <!-- Room items will be dynamically added here -->
-      </ul>
-      <button onclick="createRoom()">Create Room</button>
-    </div>
-    <div class="content">
-      <div class="header">
-        <h1>Chat App</h1>
-        <h2>
-          <p style="display: inline-block">Welcome, to the chatroom &nbsp;<p style="display: inline-block" id="currentUser"></p></p>
-        </h2>
-        <a
-          href="file:///C:/Users/namdi/OneDrive/Desktop/CMPE-133/SE2Project-master/createAccount.html"
-          >Create Account</a
-        >
+    <div class="login-page">
+      <div class="form">
+        <form class="register-form">
+          <h2>Register Account</h2>
+          <input type="text" id="usernameRegister" placeholder="Username" />
+          <input type="password" id="passwordRegister" placeholder="Password" />
+          <select id="languageRegister">
+            <option value="" disabled selected hidden>Select Language</option>
+            <option value="option1">Option 1</option>
+            <option value="option2">Option 2</option>
+            <option value="option3">Option 3</option>
+            <option value="option4">Option 4</option>
+          </select>
+          <button id="pageRegister" >create</button>
+        </form>
       </div>
-      <div class="room-info">
-        <h2 id="roomTitle"></h2>
-        <ul id="onlineUsers"></ul>
-      </div>
+      <div class="form">
+        <form class="login-form">
+          <h2>Sign In</h2>
+          <input type="text" id="usernameLogin" placeholder="Username" />
+          <input type="password" id="passwordLogin" placeholder="Password" />
 
-      <div class="user-input">
-        <input
+          <button id="pageLogin" >login</button>
+        </form>
+      </div>
+    </div>
+    <div class="chat-website">
+      <div class="sidebar">
+        <h2>Available Rooms</h2>
+        <button onclick="getRooms()">Refresh</button>
+        <ul id="roomList">
+          <!-- Room items will be dynamically added here -->
+        </ul>
+        <button onclick="createRoom()">Create Room</button>
+      </div>
+      <div class="content">
+        <div class="header">
+          <h1>Chat App</h1>
+          <h2>
+            <p style="display: inline-block">Welcome, to the chatroom &nbsp;<p style="display: inline-block" id="currentUser"></p></p>
+          </h2>
+        </div>
+        <div class="room-info">
+          <h2 id="roomTitle"></h2>
+          <ul id="onlineUsers"></ul>
+        </div>
+  
+        <div class="user-input">
+          <input
+            type="text"
+            id="usernameInput"
+            placeholder="Enter your username"
+          />
+          <input
           type="text"
-          id="usernameInput"
-          placeholder="Enter your username"
+          id="passwordInput"
+          placeholder="Enter your password"
         />
-        <input
-        type="text"
-        id="passwordInput"
-        placeholder="Enter your password"
-      />
-        <button onclick="setUsername()">Login/Set Username</button>
-        <button onclick="userLogout()">Logout (logs out all users)</button>
+          <button onclick="setUsername()">Change Username</button>
+          <button onclick="userLogout()">Logout (logs out all users)</button>
+        </div>
       </div>
     </div>
     <script src="script.js"></script>

@@ -1,4 +1,6 @@
-body {
+
+
+.chat-website{
   font-family: Arial, sans-serif;
   display: flex;
   margin: 0;
@@ -74,4 +76,5 @@ button {
 button:hover {
   background-color: #45a049;
 }
+
 
