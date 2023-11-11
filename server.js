@@ -1,12 +1,31 @@
 const express = require('express');
 const http = require('http');
 const WebSocket = require('ws');
+const sqlite3 = require('sqlite3').verbose();
 
 const app = express();
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 
 const rooms = new Map(); // Using a Map to store room names and their online users
+
+// Connect to SQLite database
+const db = new sqlite3.Database('chatApp.db', (err) => {
+  if (err) {
+    console.error('Error opening database:', err.message);
+  } else {
+    console.log('Connected to the SQLite database.');
+    // Create a 'users' table if it doesn't exist
+    db.run(`
+      CREATE TABLE IF NOT EXISTS users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        username TEXT NOT NULL UNIQUE,
+        password TEXT NOT NULL,
+        language TEXT
+      )
+    `);
+  }
+});
 
 wss.on('connection', (ws) => {
   ws.on('message', (message) => {
@@ -35,21 +54,23 @@ wss.on('connection', (ws) => {
       } else {
         ws.send(JSON.stringify({ error: `Room "${newRoomName}" already exists.` }));
       }
-    } else if (data.username) {
-      // Handle setting and updating usernames
+    } else if (data.username && data.password) {
+      // Handle setting and updating usernames with SQLite
       const newUsername = data.username;
+      const newPassword = data.password;
+      const language = data.language || ''; // default to an empty string if not provided
 
-      // Check if the new username is already in use
-      if (ws.username !== newUsername && isUsernameInUse(newUsername, ws.room)) {
-        // If the new username is in use, send a message to the client indicating the conflict
-        ws.send(JSON.stringify({ error: 'Username is already in use' }));
-      } else {
-        // If the new username is not in use, remove the old username and set the new one
-        ws.username = newUsername;
-        
-        // Broadcast the updated list of online users for the room to all clients
-        broadcastOnlineUsers(ws.room);
-      }
+      createUser(newUsername, newPassword, language)
+        .then(() => {
+          // Set the username for the WebSocket connection
+          ws.username = newUsername;
+
+          // Broadcast the updated list of online users for the room to all clients
+          broadcastOnlineUsers(ws.room);
+        })
+        .catch((error) => {
+          ws.send(JSON.stringify({ error: error.message }));
+        });
     }
   });
 
@@ -58,6 +79,28 @@ wss.on('connection', (ws) => {
     leaveCurrentRoom(ws);
   });
 });
+
+function createUser(username, password, language) {
+  return new Promise((resolve, reject) => {
+    // Check if the username already exists in the database
+    db.get('SELECT * FROM users WHERE username = ?', [username], (err, row) => {
+      if (err) {
+        reject(new Error('Database error'));
+      } else if (row) {
+        reject(new Error('Username is already in use'));
+      } else {
+        // Insert the new user into the database
+        db.run('INSERT INTO users (username, password, language) VALUES (?, ?, ?)', [username, password, language], (err) => {
+          if (err) {
+            reject(new Error('Error creating user'));
+          } else {
+            resolve();
+          }
+        });
+      }
+    });
+  });
+}
 
 function isUsernameInUse(username, room) {
   if (!room) return false; // No room selected
@@ -100,7 +143,7 @@ function broadcastOnlineUsers(room) {
   if (!roomUsers) return;
 
   const users = roomUsers.map((user) => user.username);
-  
+
   roomUsers.forEach((client) => {
     if (client.readyState === WebSocket.OPEN) {
       client.send(JSON.stringify({ users: users, room: room }));
@@ -111,4 +154,3 @@ function broadcastOnlineUsers(room) {
 server.listen(3000, () => {
   console.log('Server listening on port 3000');
 });
-
