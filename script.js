@@ -27,6 +27,11 @@ socket.onmessage = (event) => {
   } else if (data.users) {
     // Update the room title and online users when receiving user data for a specific room
     updateRoomInfo(data.room, data.users);
+  } else if (data.newmessage) {
+      const chatList = document.getElementById('chat');
+      const chatItem = document.createElement('li');
+      chatItem.textContent = data.username+": "+data.newmessage;
+      chatList.appendChild(chatItem);
   }
 };
 
@@ -50,7 +55,6 @@ function joinRoom(room) {
   socket.send(JSON.stringify({ request: 'joinRoom', room: room }));
 }
 
-
 function createRoom() {
   const roomName = prompt('Enter the new room name:');
   if (roomName) {
@@ -61,11 +65,23 @@ function createRoom() {
   }
 }
 
+function sendMessage() {
+  const chatInputElement = document.getElementById('chatInput');
+  const chatmessage = chatInputElement.value;
+  if (chatmessage) {
+    const data = {
+      chatmessage: chatmessage
+    };
+    socket.send(JSON.stringify(data));
+    chatInputElement.value = '';
+  }
+}
 
 function updateRoomInfo(room, users) {
   const roomTitle = document.getElementById('roomTitle');
   const onlineUsersList = document.getElementById('onlineUsers');
-
+  const chatInput = document.getElementsByClassName('chat-input')[0];
+  chatInput.removeAttribute('hidden');
   roomTitle.textContent = `Room: ${room}`;
   onlineUsersList.innerHTML = '';
   users.forEach((user) => {

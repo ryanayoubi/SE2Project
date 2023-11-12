@@ -21,10 +21,15 @@
     <div class="room-info">
       <h2 id="roomTitle"></h2>
       <ul id="onlineUsers"></ul>
-    </div>
-    <div class="user-input">
-      <input type="text" id="usernameInput" placeholder="Enter your username">
-      <button onclick="setUsername()">Set Username</button>
+      <div class="user-input">
+        <input type="text" id="usernameInput" placeholder="Enter your username">
+        <button onclick="setUsername()">Set Username</button>
+      </div>
+      <ul id="chat"></ul>
+      <div hidden class="chat-input">
+        <input type="text" id="chatInput" placeholder="Enter your message">
+        <button onclick="sendMessage()">Send</button>
+      </div>
     </div>
   </div>
   <script src="script.js"></script>

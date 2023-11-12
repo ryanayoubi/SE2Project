@@ -50,6 +50,9 @@ wss.on('connection', (ws) => {
         // Broadcast the updated list of online users for the room to all clients
         broadcastOnlineUsers(ws.room);
       }
+    } else if (data.chatmessage) {
+      const message = data.chatmessage;
+      broadcastNewMessage(ws.room,ws.username,message);
     }
   });
 
@@ -104,6 +107,16 @@ function broadcastOnlineUsers(room) {
   roomUsers.forEach((client) => {
     if (client.readyState === WebSocket.OPEN) {
       client.send(JSON.stringify({ users: users, room: room }));
+    }
+  });
+}
+
+function broadcastNewMessage(room,username,message) {
+  const roomUsers = rooms.get(room);
+  if (!roomUsers) return;
+  roomUsers.forEach((client) => {
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(JSON.stringify({ newmessage: message, username: username}));
     }
   });
 }
