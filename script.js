@@ -45,7 +45,7 @@ function loginOp(event) {
 
   
   checkLogin(username, password);
-  removeLoginPage();
+  //removeLoginPage();
   usernameInput.value = '';
   passwordInput.value = '';
 }
@@ -60,7 +60,7 @@ function registerOp(event) {
   const passwordInput = document.getElementById('passwordRegister');
   const password = passwordInput.value;
   //no languages for now
-  const languageInput = document.getElementById('languageRegister');
+  let languageInput = document.getElementById('languageRegister');
   const language = languageInput.value; // is a string
 
   const userObject = { username, password, language };
@@ -71,15 +71,36 @@ function registerOp(event) {
   
   
   checkLogin(username, password);
-  removeLoginPage();
+  //removeLoginPage();
   usernameInput.value = '';
   passwordInput.value = '';
+  languageInput.selectedIntex = "0";
 }
 
 function removeLoginPage() {
   var loginPage = document.getElementsByClassName('login-page')[0];
   loginPage.style.display = "none";
 }
+
+function getLoginForm() {
+  var loginPage = document.getElementsByClassName('login-page')[0];
+  loginPage.style.display = "flex";
+}
+
+function cancelLogin(event) {
+  event.preventDefault(); // Prevents the default behavior
+  const usernameInput = document.getElementById('usernameRegister');
+  const passwordInput = document.getElementById('passwordRegister');
+  let languageInput = document.getElementById('languageRegister');
+
+  usernameInput.value = '';
+  passwordInput.value = '';
+  languageInput.selectedIndex = "0";
+
+  removeLoginPage();
+}
+
+
 
 
 function checkLogin(username, password) {
@@ -106,6 +127,8 @@ function checkLogin(username, password) {
           };
           socket.send(JSON.stringify(data));
         }
+        removeLoginPage();
+        removeEditPage();
       }else {
         alert("Incorrect Password! Plase try again");
       }
@@ -120,9 +143,114 @@ function checkLogin(username, password) {
 
 }
 
+// functions for editing account
+
+function saveEditAccount(event) {
+  event.preventDefault(); // Prevents the default behavior
+  //function to add data fo localstorage
+
+  //get user, pass, and language
+  const usernameInput = document.getElementById('usernameEdit');
+  const username = usernameInput.value;
+  const passwordInput = document.getElementById('passwordEdit');
+  let password = passwordInput.value;
+  //no languages for now
+  let languageInput = document.getElementById('languageEdit');
+  const language = languageInput.value; // is a string
+
+
+  //check for no new password
+  const welcomeName = document.getElementById('currentUser');
+  const currentName = welcomeName.innerText;
+  if(password === "") {
+    let userInfo = localStorage.getItem(currentName);
+    const storedObject = JSON.parse(userInfo);
+    password = storedObject.password;
+  }
+
+  const userObject = { username, password, language };
+  // Convert the object to a JSON string
+  const objectString = JSON.stringify(userObject);
+
+  // delete previous localstorage info
+  localStorage.removeItem(currentName);
+
+
+  // Store the JSON string in localStorage with a specific key
+  localStorage.setItem(username, objectString);
+  checkLogin(username, password);
+  //setUsername();
+  removeEditPage();
+}
+
+function cancelEditing(event) {
+  event.preventDefault();
+  removeEditPage();
+}
+
+function removeEditPage() {
+  var loginPage = document.getElementsByClassName('edit-page')[0];
+  loginPage.style.display = "none";
+}
+
+function getEditForm() {
+  //get current user
+  const welcomeName = document.getElementById('currentUser');
+  const currentName = welcomeName.innerText;
+
+  if (currentName != "") {
+    var loginPage = document.getElementsByClassName('edit-page')[0];
+    loginPage.style.display = "flex";
+
+    fillEditForm(currentName);
+  }
+}
+
+function fillEditForm(currentName) {
+  //check for account
+  let userInfo = localStorage.getItem(currentName);
+  const storedObject = JSON.parse(userInfo);
+
+  const usernameInput = document.getElementById('usernameEdit');
+  //const passwordInput = document.getElementById('passwordEdit');
+  let languageInput = document.getElementById('languageEdit');
+
+  let valueToSelect = storedObject.language;
+
+  usernameInput.value = storedObject.username;
+  //passwordInput.value = storedObject.password;
+
+  for (var i = 0; i < languageInput.options.length; i++) {
+    if (languageInput.options[i].value === valueToSelect) {
+      // Set the 'selected' property to true for the matched option
+      languageInput.options[i].selected = true;
+      break; // Exit the loop once the correct option is selected
+    }
+  }
+
+}
+
+function deleteAccountAlert(event) {
+  event.preventDefault();
+  let text = "Please confirm the deletion of your account.";
+  if (confirm(text) == true) {
+    const welcomeName = document.getElementById('currentUser');
+    const currentName = welcomeName.innerText;
+    localStorage.removeItem(currentName);
+    removeEditPage();
+  }
+}
+
+
 //when the buttons are clicked
 document.getElementById('pageRegister').addEventListener('click', registerOp);
 document.getElementById('pageLogin').addEventListener('click', loginOp);
+//document.getElementById('getLoginForm').addEventListener('click', loginOp);
+document.getElementById('removeLoginPage').addEventListener('click', cancelLogin);
+
+document.getElementById('saveEdit').addEventListener('click', saveEditAccount);
+document.getElementById('removeEditPage').addEventListener('click', cancelEditing);
+document.getElementById('deleteAccount').addEventListener('click', deleteAccountAlert);
 
 //login-page functions end
 

@@ -11,10 +11,35 @@
   width: 200px;
   background-color: #f1f1f1;
   padding: 15px;
+
+  position: relative;
 }
 
 .sidebar h2 {
   margin-bottom: 10px;
+}
+
+.getForms {
+  position: absolute;
+  bottom: 5px;
+  
+}
+.getForms button {
+  margin-bottom: 10px;
+  
+}
+
+.loginButton {
+  margin-bottom: 10px;
+}
+
+.cancelButton {
+  text-decoration: none;
+  color: #4CAF50;
+}
+.cancelButton:visited {
+  text-decoration: none;
+  color: #4CAF50;
 }
 
 .content {
