@@ -52,6 +52,19 @@ body {
   border-radius: 5px;
 }
 
+#chat {
+  list-style: none;
+  padding: 0;
+}
+
+#chatInput {
+  padding: 10px;
+  margin-right: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
 button {
   padding: 10px 20px;
   font-size: 16px;
