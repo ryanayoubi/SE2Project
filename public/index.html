@@ -25,13 +25,13 @@
         </form>
       </div>
       <div class="form">
-        <form class="login-form">
+        <form class="login-form" onsubmit="return false;">
           <h2>Sign In</h2>
           <input type="text" id="usernameLogin" placeholder="Username" />
           <input type="password" id="passwordLogin" placeholder="Password" />
-
-          <button id="pageLogin" >login</button>
-        </form>
+          <div id="loginError" style="color: red;"></div>
+          <button id="pageLogin" onclick="setCredentials()">login</button>
+        </form>        
       </div>
     </div>
     <div class="chat-website">
@@ -46,27 +46,24 @@
       <div class="content">
         <div class="header">
           <h1>Chat App</h1>
-          <h2>
-            <p style="display: inline-block">Welcome, to the chatroom &nbsp;<p style="display: inline-block" id="currentUser"></p></p>
-          </h2>
         </div>
         <div class="room-info">
           <h2 id="roomTitle"></h2>
           <ul id="onlineUsers"></ul>
-        </div>
-  
-        <div class="user-input">
-          <input
-            type="text"
-            id="usernameInput"
-            placeholder="Enter your username"
-          />
+          <div class="user-input">
+            <input type="text" id="usernameInput" placeholder="Enter your username">
+            <button onclick="setUsername()">Set Username</button>
+          </div>
+          <ul id="chat"></ul>
+          <div hidden class="chat-input">
+            <input type="text" id="chatInput" placeholder="Enter your message">
+            <button onclick="sendMessage()">Send</button>
           <input
           type="text"
           id="passwordInput"
           placeholder="Enter your password"
         />
-          <button onclick="setUsername()">Change Username</button>
+          <button onclick="setCredentials()">Change User Info</button>
           <button onclick="userLogout()">Logout (logs out all users)</button>
         </div>
       </div>
