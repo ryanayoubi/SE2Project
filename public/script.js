@@ -24,7 +24,7 @@ socket.onmessage = (event) => {
     updateRoomInfo(data.room, data.users);
   } else if (data.loginSuccess) {
     console.log(data.loginMessage);
-    removeLoginPage();
+    removeLoginPage(event);
   } else if (!data.loginSuccess) {
     console.error(data.loginMessage);
   }
@@ -88,6 +88,7 @@ function createAccount() {
 // new code 
 
 function accountLogin(event) {
+  event.preventDefault();
   const usernameLogin = document.getElementById('usernameLogin').value;
   const passwordLogin = document.getElementById('passwordLogin').value;
 
@@ -99,13 +100,12 @@ function accountLogin(event) {
     };
     socket.send(JSON.stringify(data));
   }
-
-  removeLoginPage(event);
 }
 
 function removeLoginPage(event) {
-  event.preventDefault();
   var loginPage = document.getElementsByClassName('login-page')[0];
-  loginPage.style.display = "none";
+  if (loginPage) {
+    loginPage.style.display = 'none';
+  }
 }
 
