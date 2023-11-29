@@ -11,7 +11,6 @@ const wss = new WebSocket.Server({ server });
 app.use(express.static(path.join(__dirname, 'public')));
 
 const rooms = new Map();
-
 const db = new sqlite3.Database('user_accounts.db', (err) => {
   if (err) {
     console.error('Error opening database:', err.message);
@@ -48,25 +47,6 @@ wss.on('connection', (ws) => {
       } else {
         ws.send(JSON.stringify({ error: `Room "${newRoomName}" already exists.` }));
       }
-    } else if (data.username) {
-      // Handle setting and updating usernames
-      const newUsername = data.username;
-
-      // Check if the new username is already in use
-      if (ws.username !== newUsername && isUsernameInUse(newUsername, ws.room)) {
-        // If the new username is in use, send a message to the client indicating the conflict
-        ws.send(JSON.stringify({ error: 'Username is already in use' }));
-      } else {
-        // If the new username is not in use, remove the old username and set the new one
-        ws.username = newUsername;
-        
-        // Broadcast the updated list of online users for the room to all clients
-        broadcastOnlineUsers(ws.room);
-      }
-    } else if (data.chatmessage) {
-      const message = data.chatmessage;
-      broadcastNewMessage(ws.room,ws.username,message);
-      
     } else if (data.request === 'createAccount') {
       const username = data.username;
       const password = data.password;
@@ -78,15 +58,20 @@ wss.on('connection', (ws) => {
           ws.send(JSON.stringify({ message: 'Account created successfully!' }));
         }
       });
-
-    } else if (data.request === 'login') {
+    } else if (data.request === 'accountLogin') {// new code
       const username = data.username;
       const password = data.password;
 
-      console.log(`Received login request for username: ${username}`);
-
-      loginUser(username, password, ws);
-
+      // database is checked to see if there exists a user entry with the same username and password
+      db.get('SELECT * FROM users WHERE USERNAME = ? AND PASSWORD = ?', [username, password], (err, row) => {
+        if (err) {
+          ws.send(JSON.stringify({ loginSuccess: false, loginMessage: 'Database error' }));
+        } else if (row) {
+          ws.send(JSON.stringify({ loginSuccess: true, loginMessage: 'Login successful' }));
+        } else {
+          ws.send(JSON.stringify({ loginSuccess: false, loginMessage: 'Invalid credentials' }));
+        }
+      });
     } else if (data.username) {
       const newUsername = data.username;
 
@@ -149,24 +134,6 @@ function broadcastOnlineUsers(room) {
   roomUsers.forEach((client) => {
     if (client.readyState === WebSocket.OPEN) {
       client.send(JSON.stringify({ users: users, room: room }));
-    }
-  });
-}
-
-function loginUser(username, password, ws) {
-  db.get('SELECT * FROM users WHERE username = ? AND password = ?', [username, password], (err, row) => {
-    if (err) {
-      console.error(err.message);
-      ws.send(JSON.stringify({ error: 'Internal server error' }));
-      return;
-    }
-
-    if (row) {
-      // Set the username for the WebSocket connection
-      ws.username = username;
-      ws.send(JSON.stringify({ message: 'Login successful' }));
-    } else {
-      ws.send(JSON.stringify({ error: 'Invalid username or password' }));
     }
   });
 }
