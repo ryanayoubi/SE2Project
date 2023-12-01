@@ -55,7 +55,7 @@ wss.on('connection', (ws) => {
         if (err) {
           ws.send(JSON.stringify({ error: 'Failed to create account. Please try again.' }));
         } else {
-          ws.send(JSON.stringify({ message: 'Account created successfully!' }));
+          ws.send(JSON.stringify({ createMessage: 'Account created successfully!' }));
         }
       });
     } else if (data.request === 'accountLogin') {// new code

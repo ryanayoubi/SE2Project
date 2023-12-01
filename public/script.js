@@ -22,6 +22,9 @@ socket.onmessage = (event) => {
     console.error(data.error);
   } else if (data.users) {
     updateRoomInfo(data.room, data.users);
+  } else if (data.createMessage) {
+    console.log(data.createMessage);
+    removeLoginPage(event);
   } else if (data.loginSuccess) {
     console.log(data.loginMessage);
     removeLoginPage(event);
@@ -71,7 +74,8 @@ function updateRoomInfo(room, users) {
   });
 }
 
-function createAccount() {
+function createAccount(event) {
+  event.preventDefault();
   const usernameRegister = document.getElementById('usernameRegister').value;
   const passwordRegister = document.getElementById('passwordRegister').value;
 
@@ -100,6 +104,7 @@ function accountLogin(event) {
     };
     socket.send(JSON.stringify(data));
   }
+  removeLoginPage(event);
 }
 
 function removeLoginPage(event) {
@@ -108,4 +113,3 @@ function removeLoginPage(event) {
     loginPage.style.display = 'none';
   }
 }
-
