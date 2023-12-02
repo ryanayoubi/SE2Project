@@ -1,4 +1,4 @@
-body {
+.chat-website {
   font-family: Arial, sans-serif;
   display: flex;
   margin: 0;
@@ -9,6 +9,7 @@ body {
   width: 200px;
   background-color: #f1f1f1;
   padding: 15px;
+  position: relative;
 }
 
 .sidebar h2 {
@@ -52,6 +53,20 @@ body {
   border-radius: 5px;
 }
 
+#chat {
+  list-style: none;
+  padding: 0;
+}
+
+#chatInput {
+  padding: 10px;
+  margin-right: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+
 button {
   padding: 10px 20px;
   font-size: 16px;
@@ -67,3 +82,26 @@ button:hover {
   background-color: #45a049;
 }
 
+
+/* new css for sidebar*/
+.getForms {
+  position: absolute;
+  bottom: 5px;
+}
+.getForms button {
+  margin-bottom: 10px;
+}
+
+.loginButton {
+  margin-bottom: 10px;
+}
+
+.cancelButton {
+  text-decoration: none;
+  color: #4CAF50;
+}
+
+.cancelButton:visited {
+  text-decoration: none;
+  color: #4CAF50;
+}

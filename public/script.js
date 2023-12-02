@@ -27,6 +27,11 @@ socket.onmessage = (event) => {
   } else if (data.users) {
     // Update the room title and online users when receiving user data for a specific room
     updateRoomInfo(data.room, data.users);
+  } else if (data.newmessage) {
+    const chatList = document.getElementById('chat');
+    const chatItem = document.createElement('li');
+    chatItem.textContent = data.username+": "+data.newmessage;
+    chatList.appendChild(chatItem);
   } else if (data.createMessage) {
     // handle create account messages
     console.log(data.createMessage);
@@ -34,6 +39,8 @@ socket.onmessage = (event) => {
     // successful login
     console.log(data.loginMessage);
     removeLoginPage(event);
+    const setID = document.getElementById('accountID');
+    setID.innerText = data.accountID;
   } else if (!data.loginSuccess) {
     // incorrect login
     console.error(data.loginMessage);
@@ -64,13 +71,29 @@ function createRoom() {
   const roomName = prompt('Enter the new room name:');
   if (roomName) {
     socket.send(JSON.stringify({ request: 'createRoom', room: roomName }));
+
+    // Request the updated list of rooms after creating a new room
     socket.send(JSON.stringify({ request: 'getRooms' }));
+  }
+}
+
+function sendMessage() {
+  const chatInputElement = document.getElementById('chatInput');
+  const chatmessage = chatInputElement.value;
+  if (chatmessage) {
+    const data = {
+      chatmessage: chatmessage
+    };
+    socket.send(JSON.stringify(data));
+    chatInputElement.value = '';
   }
 }
 
 function updateRoomInfo(room, users) {
   const roomTitle = document.getElementById('roomTitle');
   const onlineUsersList = document.getElementById('onlineUsers');
+  const chatInput = document.getElementsByClassName('chat-input')[0];
+  chatInput.removeAttribute('hidden');
 
   roomTitle.textContent = `Room: ${room}`;
   onlineUsersList.innerHTML = '';
@@ -98,8 +121,19 @@ function createAccount(event) {
       username: usernameRegister,
       password: passwordRegister,
     };
+
+    const setUsername = {
+      username: usernameRegister
+    };
+    
     socket.send(JSON.stringify(dataCreate));
+
+    // send login request using the same info
     socket.send(JSON.stringify(dataLogin));
+
+    //set username for Map
+    socket.send(JSON.stringify(setUsername));
+    resetLoginPage();
   }
 }
 
@@ -116,9 +150,17 @@ function accountLogin(event) {
       username: usernameLogin,
       password: passwordLogin,
     };
+
+    const setUsername = {
+      username: usernameLogin
+    };
+
+    // request to check for account
     socket.send(JSON.stringify(data));
+    //set username for Map
+    socket.send(JSON.stringify(setUsername));
+    resetLoginPage();
   }
-  removeLoginPage(event);
 }
 
 function removeLoginPage(event) {
@@ -127,3 +169,80 @@ function removeLoginPage(event) {
     loginPage.style.display = 'none';
   }
 }
+
+function getLoginForm() {
+  var loginPage = document.getElementsByClassName('login-page')[0];
+  loginPage.style.display = "flex";
+}
+
+function cancelLogin(event) {
+  event.preventDefault(); // Prevents the default behavior
+  resetLoginPage();
+
+  removeLoginPage(event);
+}
+
+function resetLoginPage() {
+  const usernameRegister = document.getElementById('usernameRegister');
+  const passwordRegister = document.getElementById('passwordRegister');
+  let languageInput = document.getElementById('languageRegister');
+
+  const usernameLogin = document.getElementById('usernameLogin');;
+  const passwordLogin = document.getElementById('passwordLogin');
+
+  usernameRegister.value = '';
+  passwordRegister.value = '';
+  languageInput.selectedIndex = "0";
+  usernameLogin.value = '';
+  passwordLogin.value = '';
+}
+
+// edit form code
+function cancelEditing(event) {
+  event.preventDefault();
+  removeEditPage();
+}
+
+function removeEditPage() {
+  var loginPage = document.getElementsByClassName('edit-page')[0];
+  loginPage.style.display = "none";
+}
+
+function getEditForm() {
+  //get current user
+  const accountID = document.getElementById('accountID');
+  const currentID = accountID.innerText;
+
+  if (currentID != "") {
+    var editPage = document.getElementsByClassName('edit-page')[0];
+    editPage.style.display = "flex";
+
+    //fillEditForm(currentName);
+  }
+}
+
+// delete account from database
+function deleteAccountAlert(event) {
+  event.preventDefault();
+  let text = "Please confirm the deletion of your account.";
+  if (confirm(text) == true) {
+    const accountID = document.getElementById('accountID');
+    currentID = accountID.innerText;
+
+
+    const data = {
+      request: 'deleteAccount',
+      dataID: currentID
+    };
+
+    // set delete request
+    socket.send(JSON.stringify(data));
+
+    removeEditPage();
+    location.reload();
+  }
+}
+
+document.getElementById('removeLoginPage').addEventListener('click', cancelLogin);
+document.getElementById('removeEditPage').addEventListener('click', cancelEditing);
+document.getElementById('deleteAccount').addEventListener('click', deleteAccountAlert);

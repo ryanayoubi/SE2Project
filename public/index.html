@@ -5,7 +5,6 @@
     <title>Chat App</title>
     <link rel="stylesheet" href="styles.css" />
     <link rel="stylesheet" href="loginPage.css" />
-    
   </head>
   <body>
     <div class="login-page">
@@ -21,7 +20,9 @@
             <option value="option3">Option 3</option>
             <option value="option4">Option 4</option>
           </select>
-          <button id="pageRegister" onclick="createAccount(event)">create</button>
+          <button id="pageRegister" onclick="createAccount(event)">
+            create
+          </button>
         </form>
       </div>
       <div class="form">
@@ -31,6 +32,38 @@
           <input type="password" id="passwordLogin" placeholder="Password" />
 
           <button id="pageLogin" onclick="accountLogin(event)">login</button>
+          <a href="" class="cancelButton" id="removeLoginPage">Cancel</a>
+        </form>
+      </div>
+    </div>
+    <div class="edit-page">
+      <div class="form">
+        <form class="edit-form">
+          <h2 style="margin-top: 0px">Edit Account</h2>
+          <input type="text" id="usernameEdit" placeholder="Edit Username" />
+          <input type="password" id="passwordEdit" placeholder="New Password" />
+          <select id="languageEdit">
+            <option value="" disabled selected hidden>Select Language</option>
+            <option value="option1">Option 1</option>
+            <option value="option2">Option 2</option>
+            <option value="option3">Option 3</option>
+            <option value="option4">Option 4</option>
+          </select>
+          <button id="saveEdit">Save</button>
+          <a
+            href=""
+            class="cancelButton"
+            id="removeEditPage"
+            style="display: block; margin: 5px"
+            >Cancel</a
+          >
+          <a
+            href=""
+            class="cancelButton"
+            id="deleteAccount"
+            style="display: block; margin: 5px"
+            >Delete Account</a
+          >
         </form>
       </div>
     </div>
@@ -42,35 +75,46 @@
           <!-- Room items will be dynamically added here -->
         </ul>
         <button onclick="createRoom()">Create Room</button>
+        <div class="getForms">
+          <!-- All buttons for getting forms for login, edit user info, or delete account -->
+          <button
+            class="getLoginForm"
+            id="getLoginForm"
+            onclick="getLoginForm()"
+          >
+            Register/Login
+          </button>
+          <button onclick="getEditForm()">Edit User Info</button>
+        </div>
       </div>
       <div class="content">
         <div class="header">
           <h1>Chat App</h1>
-          <h2>
-            <p style="display: inline-block">Welcome, to the chatroom &nbsp;<p style="display: inline-block" id="currentUser"></p></p>
-          </h2>
         </div>
         <div class="room-info">
           <h2 id="roomTitle"></h2>
           <ul id="onlineUsers"></ul>
-        </div>
-  
-        <div class="user-input">
-          <input
-            type="text"
-            id="usernameInput"
-            placeholder="Enter your username"
-          />
-          <input
-          type="text"
-          id="passwordInput"
-          placeholder="Enter your password"
-        />
-          <button onclick="setUsername()">Change Username</button>
-          <button onclick="userLogout()">Logout (logs out all users)</button>
+          <div class="user-input">
+            <input
+              type="text"
+              id="usernameInput"
+              placeholder="Enter your username"
+            />
+            <button onclick="setUsername()">Set Username</button>
+          </div>
+          <ul id="chat"></ul>
+          <div hidden class="chat-input">
+            <input
+              type="text"
+              id="chatInput"
+              placeholder="Enter your message"
+            />
+            <button onclick="sendMessage()">Send</button>
+          </div>
         </div>
       </div>
     </div>
+    <div style="display: none" id="accountID"></div>
     <script src="script.js"></script>
   </body>
 </html>
