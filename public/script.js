@@ -1,5 +1,6 @@
 const socket = new WebSocket('ws://localhost:3000');
 
+// Send a request for available rooms when the page loads
 socket.onopen = () => {
   socket.send(JSON.stringify({ request: 'getRooms' }));
 };
@@ -7,6 +8,7 @@ socket.onopen = () => {
 socket.onmessage = (event) => {
   const data = JSON.parse(event.data);
 
+  // Check if the response is for available rooms
   if (data.rooms) {
     const roomList = document.getElementById('roomList');
     roomList.innerHTML = '';
@@ -17,18 +19,23 @@ socket.onmessage = (event) => {
       roomList.appendChild(roomItem);
     });
   } else if (data.message) {
+    // Handle success messages
     console.log(data.message);
   } else if (data.error) {
+    // Handle error messages
     console.error(data.error);
   } else if (data.users) {
+    // Update the room title and online users when receiving user data for a specific room
     updateRoomInfo(data.room, data.users);
   } else if (data.createMessage) {
+    // handle create account messages
     console.log(data.createMessage);
-    removeLoginPage(event);
   } else if (data.loginSuccess) {
+    // successful login
     console.log(data.loginMessage);
     removeLoginPage(event);
   } else if (!data.loginSuccess) {
+    // incorrect login
     console.error(data.loginMessage);
   }
 };
@@ -80,12 +87,19 @@ function createAccount(event) {
   const passwordRegister = document.getElementById('passwordRegister').value;
 
   if (usernameRegister && passwordRegister) {
-    const data = {
+    const dataCreate = {
       request: 'createAccount',
       username: usernameRegister,
       password: passwordRegister,
     };
-    socket.send(JSON.stringify(data));
+
+    const dataLogin = {
+      request: 'accountLogin',
+      username: usernameRegister,
+      password: passwordRegister,
+    };
+    socket.send(JSON.stringify(dataCreate));
+    socket.send(JSON.stringify(dataLogin));
   }
 }
 
