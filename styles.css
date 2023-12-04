@@ -15,9 +15,18 @@ body {
   margin-bottom: 10px;
 }
 
+.rightbar {
+  width: 200px;
+  background-color: #f1f1f1;
+  padding: 15px;
+}
+
+.rightbar h2 {
+  margin-bottom: 10px;
+}
 .content {
   flex: 1;
-  padding: 20px;
+  padding: 10px;
 }
 
 .header {
@@ -27,6 +36,12 @@ body {
 
 .room-info {
   margin-bottom: 20px;
+}
+
+#game {
+  width: 50vw;
+  margin: 0 auto;
+  padding: 0;
 }
 
 #onlineUsers {
@@ -40,13 +55,14 @@ body {
 }
 
 .user-input {
-  display: flex;
   align-items: center;
 }
 
 #usernameInput {
+  width: 180px;
   padding: 10px;
   margin-right: 10px;
+  margin-bottom: 10px;
   font-size: 16px;
   border: 1px solid #ccc;
   border-radius: 5px;
@@ -80,3 +96,43 @@ button:hover {
   background-color: #45a049;
 }
 
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 20px;
+  background-color: #fff;
+}
+
+.form-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+#login-form,
+#create-account-form {
+  margin: 5px;
+}
+
+#username,
+#password,
+#new-username,
+#new-password {
+  margin-bottom: 5px;
+}
+
+.bottom {
+  position:absolute;
+  bottom: 0;
+}

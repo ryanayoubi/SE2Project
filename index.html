@@ -6,30 +6,60 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <div id="login-modal" class="modal">
+    <div class="modal-content">
+      <div class="form-container">
+        <form id="login-form">
+          <h2>Login</h2>
+          <input type="text" id="username" name="username" placeholder="username" required>
+          <input type="password" id="password" name="password" placeholder="password" required>
+          <button type="button" onclick="login()">Log In</button>
+        </form>
+  
+        <form id="create-account-form">
+          <h2>Create Account</h2>
+          <input type="text" id="new-username" name="new-username" placeholder="username" required>
+          <input type="password" id="new-password" name="new-password" placeholder="password" required>
+          <button type="button" onclick="createAccount()">Create Account</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
   <div class="sidebar">
     <h2>Available Rooms</h2>
     <button onclick="getRooms()">Refresh</button>
     <ul id="roomList">
-      <!-- Room items will be dynamically added here -->
     </ul>
     <button onclick="createRoom()">Create Room</button>
+    <div class="bottom">
+      <h2 id="balance">Balance:</h2>
+    </div>
   </div>
   <div class="content">
     <div class="header">
-      <h1>Chat App</h1>
+      <h1>Union</h1>
     </div>
     <div class="room-info">
       <h2 id="roomTitle"></h2>
-      <ul id="onlineUsers"></ul>
-      <div class="user-input">
-        <input type="text" id="usernameInput" placeholder="Enter your username">
-        <button onclick="setUsername()">Set Username</button>
+      <div hidden class = "game">
+        <canvas id="game"></canvas>
+        <button type="button" onclick="hit()">Hit</button>
+        <button type="button" onclick="stand()">Stand</button>
       </div>
       <ul id="chat"></ul>
       <div hidden class="chat-input">
         <input type="text" id="chatInput" placeholder="Enter your message">
         <button onclick="sendMessage()">Send</button>
       </div>
+    </div>
+  </div>
+  <div hidden class="rightbar">
+    <h2>Users</h2>
+    <ul id="onlineUsers"></ul>
+    <div class="user-input">
+      <input type="text" id="usernameInput" placeholder="Enter your username">
+      <button onclick="setUsername()">Set Username</button>
     </div>
   </div>
   <script src="script.js"></script>
