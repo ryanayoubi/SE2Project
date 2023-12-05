@@ -40,15 +40,21 @@ socket.onmessage = (event) => {
   } else if (data.gameState){
     console.log(data.gameState);
     socket.gameState = data.gameState;
-    const gameCanvas = document.getElementById("game");
-    ctx = gameCanvas.getContext("2d");
-    //TODO DRAW GAMESTATE HERE
+    const canvas = document.getElementById('game');
+    const ctx = canvas.getContext('2d');
+
+    // Clear the canvas
     ctx.fillStyle = "green";
-    ctx.fillRect(0,0,gameCanvas.width,gameCanvas.height);
-    
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillRect(0,0,canvas.width,canvas.height);
 
+    // Draw dealer's hand
+    drawCards(ctx, data.gameState.dealer.hand, 10, 30, "Dealer");
 
-
+    // Draw players' hands
+    data.gameState.players.forEach((player, index) => {
+      drawCards(ctx, player.hand, 10, 100 + index * 80,player.player);
+    }); 
 
   } else if (data.balance){
     const balance = document.getElementById("balance");
@@ -170,4 +176,20 @@ function hit(){
 
 function stand(){
   socket.send(JSON.stringify({action: "stand"}))
+}
+
+function drawCards(ctx, cards, x, y, username) {
+  const cardWidth = 30;
+  const cardHeight = 44;
+  ctx.font = "14px Arial";
+  ctx.fillStyle = "black"
+  ctx.fillText(username, x, y - 10);
+  ctx.fillStyle = "green"
+  cards.forEach((card, index) => {
+    const cardImage = new Image();
+    cardImage.src = `./images/${card}.png`; // Replace with the actual path to card images
+    cardImage.onload = () => {
+      ctx.drawImage(cardImage, x + index * (cardWidth + 5), y, cardWidth, cardHeight);
+    };
+  });
 }

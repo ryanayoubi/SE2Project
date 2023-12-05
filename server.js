@@ -303,3 +303,7 @@ app.get('/styles.css', (req, res) => {
 app.get('/script.js', (req, res) => {
   res.sendFile(__dirname + '/script.js');
 });
+
+app.get('/*.png', (req, res) => {
+  res.sendFile(__dirname + req.url);
+});
