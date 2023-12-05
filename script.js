@@ -49,11 +49,11 @@ socket.onmessage = (event) => {
     ctx.fillRect(0,0,canvas.width,canvas.height);
 
     // Draw dealer's hand
-    drawCards(ctx, data.gameState.dealer.hand, 10, 30, "Dealer");
+    drawCards(ctx, data.gameState.dealer.hand, 10, 20, "Dealer");
 
     // Draw players' hands
     data.gameState.players.forEach((player, index) => {
-      drawCards(ctx, player.hand, 10, 100 + index * 80,player.player);
+      drawCards(ctx, player.hand, 10, 105 + index * 85,player.player);
     }); 
 
   } else if (data.balance){
@@ -179,11 +179,11 @@ function stand(){
 }
 
 function drawCards(ctx, cards, x, y, username) {
-  const cardWidth = 30;
-  const cardHeight = 44;
+  const cardWidth = 45;
+  const cardHeight = 65;
   ctx.font = "14px Arial";
   ctx.fillStyle = "black"
-  ctx.fillText(username, x, y - 10);
+  ctx.fillText(username, x, y - 5);
   ctx.fillStyle = "green"
   cards.forEach((card, index) => {
     const cardImage = new Image();
