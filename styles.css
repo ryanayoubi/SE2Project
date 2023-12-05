@@ -72,7 +72,7 @@ body {
   list-style: none;
   overflow: auto;
   padding: 0;
-  max-height: 200px;
+  max-height: 170px;
 }
 
 #chatInput {
