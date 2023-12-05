@@ -43,8 +43,100 @@ socket.onmessage = (event) => {
     const gameCanvas = document.getElementById("game");
     ctx = gameCanvas.getContext("2d");
     //TODO DRAW GAMESTATE HERE
-    ctx.fillStyle = "green";
-    ctx.fillRect(0,0,gameCanvas.width,gameCanvas.height);
+
+    console.log("Width: " + gameCanvas.width);//300
+    console.log("Height: " + gameCanvas.height);//150
+    // Clear the canvas
+    ctx.clearRect(0, 0, 300, 150);
+    
+
+    // Example: Draw a filled rectangle over an existing area to erase it
+    // ctx.fillStyle = 'white'; // Set the color to cover up or erase with canvas background
+    // ctx.fillRect(x, y, width, height); // Draw a filled rectangle over the area
+
+
+
+    // set the array of cards from cards file
+    const cards = [];
+    const cardNames = ['1', '13', '12', '11', '10', '9', '8', '7', '6', '5', '4', '3', '2'];
+    const suits = ['h', 'd', 'c', 's'];
+
+    // Load images for each card
+    for (let suit of suits) {
+      for (let cardName of cardNames) {
+        const img = new Image();
+        img.src = `cards/${suit}${cardName}.png`; // Assuming your images are named in this format
+        cards.push({ name: cardName, suit: suit, img: img });
+      }
+    }
+
+    let dealerInfo = socket.gameState.dealer;
+    console.log(dealerInfo);
+
+    // testing to read and print the dealer's cards
+    /*
+    dealerInfo.hand.forEach((card) => {
+      console.log("card suit: " + card.charAt(0));
+      const cardNumber = card.slice(1);
+      console.log("card number: " + cardNumber);
+    });
+    */
+
+    // set dealer hand
+    dealerInfo.hand.forEach((card, index) => {
+      const x = 10 * index; // Adjust x-coordinate for card spacing
+      const y = 0; // Adjust y-coordinate
+      const cardSuit = card.charAt(0);
+      const cardNumber = card.slice(1);
+      const matchingCard = cards.find(c => c.name === cardNumber && c.suit === cardSuit);
+      //console.log(matchingCard);
+      if (matchingCard ) {
+        console.log("drawing card now!");        
+        const aspectRatio = 500 / 726; // obtained from image details
+        const targetWidth = 50; // Set your desired width
+
+        // Calculate the target height to maintain the aspect ratio
+        const targetHeight = targetWidth / aspectRatio;
+        matchingCard.img.onload = () => {
+          // Draw the card image on the canvas after it has been completely loaded
+          ctx.drawImage(matchingCard.img, x, y, targetWidth, targetHeight);
+          console.log("Finished drawing card");
+        };
+      }
+    });
+
+
+
+
+    // testing to read/print player cards
+    
+    let players = socket.gameState.players;
+    //console.log(players);
+    /*
+    players.forEach((player) => {
+      const playerName = player.player;
+      console.log(playerName);
+
+      let playerHand = player.hand;
+      console.log(playerHand);
+      
+      playerHand.forEach((card) => {
+        console.log("card suit: " + card.charAt(0));
+        const cardNumber = card.slice(1);
+        console.log("card number: " + cardNumber);
+      });
+      
+    });
+    */
+    
+    // set player hand
+
+
+
+
+
+    //ctx.fillStyle = "green";
+    //ctx.fillRect(0,0,gameCanvas.width,gameCanvas.height);
     
 
 
