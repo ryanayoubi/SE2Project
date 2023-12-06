@@ -31,7 +31,6 @@ wss.on('connection', (ws) => {
       broadcastOnlineUsers(ws.room);
       broadcastGameState(ws.room);
       ws.close();
-      leaveCurrentRoom();
     } else if (data.request === 'getRooms') {
       // If the client requests the list of available rooms, send it to them
       const roomList = Array.from(rooms.keys());
