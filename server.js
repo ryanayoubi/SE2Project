@@ -25,7 +25,13 @@ wss.on('connection', (ws) => {
   ws.on('message', async (message) => {
     const data = JSON.parse(message);
 
-    if (data.request === 'getRooms') {
+    if (data.request === 'logout') {
+      // Handle logout request
+      leaveCurrentRoom(ws);
+      broadcastOnlineUsers(ws.room);
+      broadcastGameState(ws.room);
+      ws.close();
+    } else if (data.request === 'getRooms') {
       // If the client requests the list of available rooms, send it to them
       const roomList = Array.from(rooms.keys());
       ws.send(JSON.stringify({ rooms: roomList }));
