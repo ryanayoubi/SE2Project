@@ -153,6 +153,11 @@ function login(){
   closeModal();
 }
 
+function logout() {
+  socket.send(JSON.stringify({ request: 'logout' }));
+  openModal();
+}
+
 function createAccount(){
   const usernameInput = document.getElementById('new-username');
   const username = usernameInput.value;
