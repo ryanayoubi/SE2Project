@@ -119,7 +119,7 @@ function updateRoomInfo(room, users) {
   rightBar.removeAttribute('hidden');
   const game = document.getElementsByClassName('game')[0];
   game.removeAttribute('hidden');
-  roomTitle.textContent = room ? `Room: ${room}` : 'Room: -'; // Show room name or a dash if not in a room
+  roomTitle.textContent = `Room: ${room}`;
   onlineUsersList.innerHTML = '';
   users.forEach((user) => {
     const listItem = document.createElement('li');
@@ -155,12 +155,7 @@ function login(){
 
 function logout() {
   socket.send(JSON.stringify({ request: 'logout' }));
-  openModal();
-  const chatList = document.getElementById('chat');
-  while (chatList.firstChild) {
-    chatList.removeChild(chatList.firstChild);
-  }
-  updateRoomInfo('', []);
+  location.reload();
 }
 
 function createAccount(){
