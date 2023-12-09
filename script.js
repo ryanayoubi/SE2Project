@@ -49,11 +49,11 @@ socket.onmessage = (event) => {
     ctx.fillRect(0,0,canvas.width,canvas.height);
 
     // Draw dealer's hand
-    drawCards(ctx, data.gameState.dealer.hand, 10, 30, "Dealer");
+    drawCards(ctx, data.gameState.dealer.hand, 620, 30, "Dealer");
 
     // Draw players' hands
     data.gameState.players.forEach((player, index) => {
-      drawCards(ctx, player.hand, 10, 100 + index * 80,player.player);
+      drawCards(ctx, player.hand, 10 + index*240 , 230,player.player);
     }); 
 
   } else if (data.balance){
@@ -110,6 +110,19 @@ function sendMessage() {
   }
 }
 
+function setBet() {
+  const betInputElement = document.getElementById('betInput');
+  const betValue = parseInt(betInputElement.value);
+  if (betValue&&betValue>0) {
+    const data = {
+      bet: betValue
+    };
+    socket.send(JSON.stringify(data));
+    betInputElement.value = '';
+  }
+  betInputElement.value = '';
+}
+
 function updateRoomInfo(room, users) {
   const roomTitle = document.getElementById('roomTitle');
   const onlineUsersList = document.getElementById('onlineUsers');
@@ -144,13 +157,19 @@ function login(){
   if (username) {
     const data = {
       username: username,
-      password: password
+      password: password,
+      balance: 100,
+      bet: 25
     };
     socket.send(JSON.stringify(data));
     socket.username = username;
     usernameInput.value = '';
   }
   closeModal();
+}
+
+function logout(){
+  location.reload();
 }
 
 function createAccount(){
@@ -161,7 +180,9 @@ function createAccount(){
   if (username) {
     const data = {
       username: username,
-      password: password
+      password: password,
+      balance: 100,
+      bet: 25
     };
     socket.send(JSON.stringify(data));
     socket.username = username;
@@ -179,17 +200,22 @@ function stand(){
 }
 
 function drawCards(ctx, cards, x, y, username) {
-  const cardWidth = 30;
-  const cardHeight = 44;
-  ctx.font = "14px Arial";
+  const cardWidth = 100;
+  const cardHeight = 160;
+  ctx.font = "20px Arial";
   ctx.fillStyle = "black"
   ctx.fillText(username, x, y - 10);
   ctx.fillStyle = "green"
+  const clength = cards.length;
   cards.forEach((card, index) => {
     const cardImage = new Image();
-    cardImage.src = `./images/${card}.png`; // Replace with the actual path to card images
+    cardImage.src = `./images/${card}.png`;
     cardImage.onload = () => {
-      ctx.drawImage(cardImage, x + index * (cardWidth + 5), y, cardWidth, cardHeight);
+      if(clength>1){
+        ctx.drawImage(cardImage, x + cardWidth * 1.05 * index/(clength-1), y, cardWidth, cardHeight);
+      }else{
+        ctx.drawImage(cardImage, x , y, cardWidth, cardHeight);
+      }
     };
   });
 }

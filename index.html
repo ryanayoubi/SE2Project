@@ -43,9 +43,11 @@
     <div class="room-info">
       <h2 id="roomTitle"></h2>
       <div hidden class = "game">
-        <canvas id="game",width = "600", height = "250"></canvas>
+        <canvas id="game", height="400", width="1440"></canvas>
         <button type="button" onclick="hit()">Hit</button>
         <button type="button" onclick="stand()">Stand</button>
+        <input type="text" id="betInput" placeholder="Bet Amount">
+        <button type="button" onclick="setBet()">Set Bet</button>
       </div>
       <ul id="chat"></ul>
       <div hidden class="chat-input">
@@ -60,6 +62,9 @@
     <div class="user-input">
       <input type="text" id="usernameInput" placeholder="Enter your username">
       <button onclick="setUsername()">Set Username</button>
+    </div>
+    <div class = "logout">
+      <button type="button" onclick="logout()">Logout</button>
     </div>
   </div>
   <script src="script.js"></script>

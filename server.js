@@ -16,7 +16,7 @@ const games = new Map();
 const suits = ["c","d","h","s"];
 
 db.serialize(() => {
-  db.run("CREATE TABLE IF NOT EXISTS users (username TEXT, password TEXT)");
+  db.run("CREATE TABLE IF NOT EXISTS users (username TEXT, password TEXT, balance INT, bet INT)");
 });
 
 wss.on('connection', (ws) => {
@@ -51,7 +51,9 @@ wss.on('connection', (ws) => {
       }
     } else if (data.username) {
       if(data.password){
-        db.run("INSERT INTO users(username, password) VALUES (?, ?)",[data.username,data.password]);
+          ws.balance = data.balance;
+          ws.bet = data.bet;
+          db.run("INSERT INTO users(username, password, balance, bet) VALUES (?, ?, ?, ?)",[data.username,data.password,data.balance,data.bet]);
       }
       ws.send(JSON.stringify({balance: ws.balance}));
       // Handle setting and updating usernames
@@ -79,6 +81,8 @@ wss.on('connection', (ws) => {
       broadcastNewMessage(ws.room,ws.username,data.chatmessage,message);
     } else if (data.action){
       gameHandler(ws.room,ws.username,data.action);
+    } else if (data.bet){
+      ws.bet = data.bet;
     }
   });
 

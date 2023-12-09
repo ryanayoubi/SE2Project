@@ -39,7 +39,6 @@ body {
 }
 
 #game {
-  width: 50vw;
   margin: 0 auto;
   padding: 0;
 }
@@ -131,10 +130,32 @@ button:hover {
 #password,
 #new-username,
 #new-password {
+  width: 120px;
   margin-bottom: 5px;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
 }
 
 .bottom {
   position:absolute;
   bottom: 0;
+}
+
+.logout {
+  position:absolute;
+  margin-bottom: 10px;
+  margin-right: 10px;
+  bottom: 0;
+  right:0;
+}
+
+#betInput {
+  width: 100px;
+  padding: 10px;
+  margin-bottom: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
 }
