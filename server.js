@@ -40,7 +40,19 @@ wss.on('connection', (ws) => {
       // Send the updated list of online users for the selected room
       broadcastOnlineUsers(roomToJoin);
       broadcastGameState(roomToJoin);
-    } else if (data.request === 'createRoom') {
+    } else if (data.request === 'randomRoom') {
+      if(rooms.size>0){
+        const roomToJoin = (Array.from(rooms))[Math.floor(Math.random() * rooms.size)][0];
+        // Remove the user from their current room, if any
+        leaveCurrentRoom(ws);
+        // Add the user to the selected room
+        joinRoom(roomToJoin, ws);
+
+        // Send the updated list of online users for the selected room
+        broadcastOnlineUsers(roomToJoin);
+        broadcastGameState(roomToJoin);
+      }
+    }else if (data.request === 'createRoom') {
       // Handle creating a new room
       const newRoomName = data.room;
       if (!rooms.has(newRoomName)) {

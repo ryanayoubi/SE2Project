@@ -89,6 +89,14 @@ function joinRoom(room) {
   }
 }
 
+function randomRoom() {
+  socket.send(JSON.stringify({request: 'randomRoom'}));
+  const chatList = document.getElementById('chat');
+  while(chatList.firstChild){
+    chatList.removeChild(chatList.firstChild);
+  }
+}
+
 function createRoom() {
   const roomName = prompt('Enter the new room name:');
   if (roomName) {

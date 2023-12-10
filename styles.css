@@ -159,3 +159,7 @@ button:hover {
   border: 1px solid #ccc;
   border-radius: 5px;
 }
+
+#random {
+  margin-top: 10px;
+}
