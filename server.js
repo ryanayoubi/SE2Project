@@ -22,6 +22,7 @@ db.serialize(() => {
 wss.on('connection', (ws) => {
   ws.balance = 100;
   ws.bet = 25;
+  ws.nextbet = 25;
   ws.on('message', async (message) => {
     const data = JSON.parse(message);
 
@@ -94,7 +95,7 @@ wss.on('connection', (ws) => {
     } else if (data.action){
       gameHandler(ws.room,ws.username,data.action);
     } else if (data.bet){
-      ws.bet = data.bet;
+      ws.nextbet = data.bet;
     }
   });
 
@@ -283,6 +284,7 @@ function gameHandler(room, player, action){
         games.get(room).players.set(client.username,{
           hand:[suits[Math.floor(Math.random()*suits.length)]+(Math.floor(Math.random()*13)+1),suits[Math.floor(Math.random()*suits.length)]+(Math.floor(Math.random()*13)+1)],
           done:0});
+        client.bet = client.nextbet;
         client.balance -= client.bet;
         client.send(JSON.stringify({balance: client.balance}));
       });
